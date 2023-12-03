@@ -20,7 +20,7 @@ int main() {
         cin >> escolha;
 
         switch (escolha) {
-            case 1:
+            case 1: {
                 cout << "Digite seu email: ";
                 cin >> email;
                 cout << "Digite sua senha: ";
@@ -28,8 +28,9 @@ int main() {
 
                 bancoDeDados.login(email, senha);
                 break;
+            }
 
-            case 2:
+            case 2: {
                 cout << "Digite seu nome: ";
                 cin >> nome;
                 cout << "Digite seu email: ";
@@ -39,12 +40,17 @@ int main() {
 
                 bancoDeDados.registrar(nome, email, senha);
                 break;
+            }
 
-            case 0:
-                break;
+            case 0: {
+                cout << "Saindo...\n";
+                return 0;
+            }
                 
-            default:
-                cout << "Opção inválida. Por favor, tente novamente.\n";
+            default: {
+                cout << "Opção inválida!\n";
+                break;
+            }
         }
     }
 };

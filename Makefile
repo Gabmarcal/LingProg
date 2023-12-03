@@ -1,7 +1,7 @@
 # Variáveis para os comandos de compilação e flags
 CXX = g++
 CXXFLAGS = -Wall
-CLIBS = -lssl -lsqlite3
+CLIBS = -lssl -lsqlite3 -lcrypto
 
 # Nome do executável
 TARGET = main
@@ -16,7 +16,7 @@ OBJDIR = obj/
 SRC = $(SRCDIR)main.cpp $(SRCDIR)Projeto/Projeto.cpp $(SRCDIR)Usuario/Usuario.cpp $(SRCDIR)BancoDeDados/BancoDeDados.cpp $(SRCDIR)Tarefa/Tarefa.cpp $(SRCDIR)Usuario/Senha.h
 
 # Arquivos objeto
-OBJ = $(OBJDIR)main.o $(OBJDIR)Projeto.o $(OBJDIR)Usuario.o $(OBJDIR)BancoDeDados.o $(OBJDIR)Tarefa.o
+OBJ = $(OBJDIR)main.o $(OBJDIR)Projeto.o $(OBJDIR)Usuario.o $(OBJDIR)BancoDeDados.o $(OBJDIR)Tarefa.o $(OBJDIR)Senha.o
 
 # Regra padrão
 all: $(TARGET)

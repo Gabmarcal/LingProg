@@ -1,5 +1,8 @@
 #include "Senha.h"
+#include "SenhaException.h"
 #include <openssl/sha.h>
+#include <openssl/evp.h>
+#include <iomanip>
 
 Senha::Senha( string senha ) : senha( senha ) {}
 
@@ -7,28 +10,42 @@ Senha::Senha( string senha ) : senha( senha ) {}
 void Senha::generateSalt() {
     const int saltLength = 16;
     unsigned char buffer[saltLength];
-    RAND_bytes(buffer, sizeof(buffer));
-    string _salt(reinterpret_cast<char>(buffer), saltLength);
-    salt = _salt;
+    if (RAND_bytes(buffer, sizeof(buffer)) == 1) { // Se RAND_bytes retornar 1, a operação foi bem-sucedida
+        salt.assign(reinterpret_cast<char*>(buffer), saltLength);
+    } else {
+        throw SenhaException("Erro ao gerar salt");
+    }
 }
+
 
 void Senha::combinePasswordAndSalt() {
     senha = senha + salt;
 }
 
-void Senha::calculateSHA256() {
-    unsigned char hash[SHA256_DIGEST_LENGTH];
-    SHA256_CTX sha256;
-    SHA256_Init(&sha256);
-    SHA256_Update(&sha256, senha.c_str(), senha.size());
-    SHA256_Final(hash, &sha256);
 
-    char hashHex[2 *SHA256_DIGEST_LENGTH + 1];
-    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
-        sprintf(&hashHex[i * 2], "%02x", hash[i]);
+void Senha::calculateSHA256() {
+    unsigned char hash[EVP_MAX_MD_SIZE];
+    unsigned int lengthOfHash = 0;
+
+    EVP_MD_CTX* context = EVP_MD_CTX_new();
+
+    if (context != nullptr) {
+        if (EVP_DigestInit_ex(context, EVP_sha256(), nullptr) &&
+            EVP_DigestUpdate(context, senha.c_str(), senha.size()) &&
+            EVP_DigestFinal_ex(context, hash, &lengthOfHash)) {
+            // Converte hash para hexadecimal
+            std::ostringstream oss;
+            for (unsigned int i = 0; i < lengthOfHash; ++i) {
+                oss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
+            }
+
+            EVP_MD_CTX_free(context);
+            hashPassword = oss.str();
+        }
     }
 
-    hashPassword = string(hashHex);
+    EVP_MD_CTX_free(context); // Libera o contexto em caso de falha
+    throw SenhaException("Erro ao calcular hash SHA-256");
 }
 
 string Senha::getHashedPassword() {
