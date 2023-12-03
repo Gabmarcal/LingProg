@@ -1,0 +1,60 @@
+#include "Tarefa.h"
+
+// Construtor
+Tarefa::Tarefa(int id, string titulo, string descricao, Status status, time_t dataCriacao, time_t dataPrazo)
+    : id(id), titulo(titulo), descricao(descricao), status(status), dataCriacao(dataCriacao), dataPrazo(dataPrazo) {}
+
+// Getters e Setters
+int Tarefa::getId() const {
+    return id;
+}
+
+void Tarefa::setId(int novoId) {
+    id = novoId;
+}
+
+string Tarefa::getTitulo() const {
+    return titulo;
+}
+
+void Tarefa::setTitulo(string novoTitulo) {
+    titulo = novoTitulo;
+}
+
+string Tarefa::getDescricao() const {
+    return descricao;
+}
+
+void Tarefa::setDescricao(string novaDescricao) {
+    descricao = novaDescricao;
+}
+
+Status Tarefa::getStatus() const {
+    return status;
+}
+
+void Tarefa::setStatus(Status novoStatus) {
+    status = novoStatus;
+}
+
+time_t Tarefa::getDataCriacao() const {
+    return dataCriacao;
+}
+
+void Tarefa::setDataCriacao(time_t novaDataCriacao) {
+    dataCriacao = novaDataCriacao;
+}
+
+time_t Tarefa::getDataPrazo() const {
+    return dataPrazo;
+}
+
+void Tarefa::setDataPrazo(time_t novoPrazo) {
+    dataPrazo = novoPrazo;
+}
+
+// Sobrecarga de operadores
+
+bool Tarefa::operator<(const Tarefa& tarefa) const {
+    return id < tarefa.id;
+}
