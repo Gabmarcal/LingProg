@@ -42,11 +42,19 @@ int main() {
                 break;
             }
 
+            case 3:{
+                bancoDeDados.conectar();
+                bancoDeDados.criarTabelas("schema.sql");
+                bancoDeDados.desconectar();
+                cout << "Tabelas criadas com sucesso." << endl;
+                break;
+            }
+
             case 0: {
                 cout << "Saindo...\n";
                 return 0;
             }
-                
+        
             default: {
                 cout << "Opção inválida!\n";
                 break;

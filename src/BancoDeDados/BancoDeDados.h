@@ -20,6 +20,7 @@ class BancoDeDados {
         // Conexão do banco de dados
         void conectar();
         void desconectar();
+        void criarTabelas(string arquivo);
 
         // Usuários
         void inserirUsuario(Usuario& usuario);

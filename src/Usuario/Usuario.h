@@ -12,7 +12,7 @@ using namespace std;
 
 class Usuario {
     public:
-        Usuario(int id, string nome, string email, string senha);
+        Usuario(int _id, string _nome, string _email, string _senha);
 
         // Getters
         int getId() const;

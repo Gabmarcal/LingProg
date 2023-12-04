@@ -1,6 +1,9 @@
 #include "BancoDeDados.h"
 #include "../Usuario/Senha.h"
 
+#include <fstream>
+#include <sstream>
+
 BancoDeDados::BancoDeDados(string stringConexao) 
     : stringConexao(stringConexao) {}
 
@@ -20,6 +23,27 @@ void BancoDeDados::desconectar() {
 
     if (resultado != SQLITE_OK) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
+    }
+}
+
+void BancoDeDados::criarTabelas(string arquivo) {
+    ifstream file(arquivo);
+
+    // Verificar se o arquivo foi aberto com sucesso
+    if (!file.is_open()) {
+        throw runtime_error("Erro ao abrir o arquivo " + arquivo);
+    }
+
+    // Ler o conteúdo do arquivo em uma string
+    stringstream buffer;
+    buffer << file.rdbuf();
+    string script = buffer.str();
+
+    char* errmsg;
+    if (sqlite3_exec(db, script.c_str(), nullptr, nullptr, &errmsg) != SQLITE_OK) {
+        string error = errmsg;
+        sqlite3_free(errmsg);  // Liberar a memória alocada por sqlite3_exec
+        throw runtime_error(error);
     }
 }
 
