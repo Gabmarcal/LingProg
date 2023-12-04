@@ -279,9 +279,10 @@ int BancoDeDados::generate_id(string table) {
 }
 
 void BancoDeDados::registrar(string nome, string email, string senha) {
-    int resultado;
-    int id = generate_id("usuario");
+    
     string hash_senha = Senha(senha).getHashedPassword();
+    int id = generate_id("usuario");
+
     
     Usuario user_novo(id, nome, email, hash_senha);
     inserirUsuario(user_novo);

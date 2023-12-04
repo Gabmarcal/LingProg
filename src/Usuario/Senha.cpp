@@ -41,8 +41,10 @@ void Senha::calculateSHA256() {
 
             EVP_MD_CTX_free(context);
             hashPassword = oss.str();
+            return;
         }
     }
+    
 
     EVP_MD_CTX_free(context); // Libera o contexto em caso de falha
     throw SenhaException("Erro ao calcular hash SHA-256");
@@ -58,12 +60,12 @@ string Senha::getHashedPassword() {
     return finalPassword;
 }
 
-bool Senha::comparePassword(string inputPassword) {
-    // Primeiro, armazena a senha original temporariamente
-    string originalPassword = senha;
+bool Senha::comparePassword(string hashedPassword) {
+    // Recupera o salt da senha armazenada
+    salt = hashedPassword.substr(0, hashedPassword.find('.'));
 
-    // Define a senha da classe para a senha de entrada
-    senha = inputPassword;
+    // Recupera o hash da senha armazenada
+    hashedPassword = hashedPassword.substr(hashedPassword.find('.') + 1);
 
     // Combina a senha de entrada com o salt armazenado
     combinePasswordAndSalt();
@@ -71,9 +73,6 @@ bool Senha::comparePassword(string inputPassword) {
     // Calcula o hash SHA-256 da senha de entrada combinada com o salt
     calculateSHA256();
 
-    // Restaura a senha original da classe
-    senha = originalPassword;
-
-    // Compara o hash calculado com o hash armazenado
-    return hashPassword == this->hashPassword;
+    // Retorna true se os hashes forem iguais
+    return hashPassword == hashedPassword;
 }

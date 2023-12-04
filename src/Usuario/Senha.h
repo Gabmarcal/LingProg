@@ -15,7 +15,7 @@ class Senha {
         Senha( string senha );
 
         string getHashedPassword();
-        bool comparePassword(string inputPassword);
+        bool comparePassword(string hashedPassword);
 
     private:
         void generateSalt();
