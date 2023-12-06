@@ -3,7 +3,7 @@
 
 Usuario::Usuario(int id, string nome, string email, string senha) : id(id), nome(nome), email(email) {
     Senha senha_hash(senha);
-    senha = senha_hash.getHashedPassword();
+    this->senha = senha_hash.getHashedPassword();
 }
 
 // Getters

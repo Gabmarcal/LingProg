@@ -13,10 +13,10 @@ SRCDIR = src/
 OBJDIR = obj/
 
 # Arquivos fonte
-SRC = $(SRCDIR)main.cpp $(SRCDIR)Projeto/Projeto.cpp $(SRCDIR)Usuario/Usuario.cpp $(SRCDIR)BancoDeDados/BancoDeDados.cpp $(SRCDIR)Tarefa/Tarefa.cpp $(SRCDIR)Usuario/Senha.h
+SRC = $(SRCDIR)main.cpp $(SRCDIR)Projeto/Projeto.cpp $(SRCDIR)Usuario/Usuario.cpp $(SRCDIR)BancoDeDados/BancoDeDados.cpp $(SRCDIR)Tarefa/Tarefa.cpp $(SRCDIR)Usuario/Senha.cpp $(SRCDIR)Menu/Menu.cpp $(SRCDIR)Menu/MenuNaoLogado.cpp $(SRCDIR)Menu/MenuLogado.cpp
 
 # Arquivos objeto
-OBJ = $(OBJDIR)main.o $(OBJDIR)Projeto.o $(OBJDIR)Usuario.o $(OBJDIR)BancoDeDados.o $(OBJDIR)Tarefa.o $(OBJDIR)Senha.o
+OBJ = $(OBJDIR)main.o $(OBJDIR)Projeto.o $(OBJDIR)Usuario.o $(OBJDIR)BancoDeDados.o $(OBJDIR)Tarefa.o $(OBJDIR)Senha.o $(OBJDIR)Menu.o $(OBJDIR)MenuNaoLogado.o $(OBJDIR)MenuLogado.o
 
 # Regra padrão
 all: $(TARGET)
@@ -43,6 +43,16 @@ $(OBJDIR)Tarefa.o: $(SRCDIR)Tarefa/Tarefa.cpp
 
 $(OBJDIR)Senha.o: $(SRCDIR)Usuario/Senha.cpp
 	$(CXX) $(CXXFLAGS) -c $(SRCDIR)Usuario/Senha.cpp -o $(OBJDIR)Senha.o $(CLIBS)
+
+$(OBJDIR)Menu.o: $(SRCDIR)Menu/Menu.cpp
+	$(CXX) $(CXXFLAGS) -c $(SRCDIR)Menu/Menu.cpp -o $(OBJDIR)Menu.o $(CLIBS)
+
+$(OBJDIR)MenuNaoLogado.o: $(SRCDIR)Menu/MenuNaoLogado.cpp
+	$(CXX) $(CXXFLAGS) -c $(SRCDIR)Menu/MenuNaoLogado.cpp -o $(OBJDIR)MenuNaoLogado.o $(CLIBS)
+
+$(OBJDIR)MenuLogado.o: $(SRCDIR)Menu/MenuLogado.cpp
+	$(CXX) $(CXXFLAGS) -c $(SRCDIR)Menu/MenuLogado.cpp -o $(OBJDIR)MenuLogado.o $(CLIBS)
+
 
 # Regra para limpar os arquivos compilados
 clean:

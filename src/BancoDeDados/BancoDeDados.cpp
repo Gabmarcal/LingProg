@@ -303,12 +303,13 @@ int BancoDeDados::generate_id(string table) {
 }
 
 void BancoDeDados::registrar(string nome, string email, string senha) {
+
+    conectar();
     
-    string hash_senha = Senha(senha).getHashedPassword();
     int id = generate_id("usuario");
 
     
-    Usuario user_novo(id, nome, email, hash_senha);
+    Usuario user_novo(id, nome, email, senha);
     inserirUsuario(user_novo);
 
     cout << "Usuário registrado com sucesso!\n";
@@ -318,6 +319,9 @@ Usuario* BancoDeDados::login(string email, string senha) {
     int resultado;
     sqlite3_stmt* stmt;
     Usuario* usuario;
+    Senha hash_senha(senha);
+
+    conectar();
 
     string sql = "SELECT * FROM usuario WHERE email = '" + email + "';";
     resultado = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL);
@@ -329,9 +333,7 @@ Usuario* BancoDeDados::login(string email, string senha) {
     resultado = sqlite3_step(stmt);
 
     if (resultado == SQLITE_ROW) {
-        Senha senha_hash((char*) sqlite3_column_text(stmt, 3));
-
-        if (senha_hash.comparePassword(senha)) {
+        if (hash_senha.comparePassword((char*) sqlite3_column_text(stmt, 3))) {
             usuario = new Usuario(
                 sqlite3_column_int(stmt, 0), // id
                 (char*) sqlite3_column_text(stmt, 1), // nome
@@ -349,7 +351,7 @@ Usuario* BancoDeDados::login(string email, string senha) {
     
     // Adicionando todas as tarefas em usuário
 
-    sql = "SELECT * FROM tarefa WHERE id_usuario = '" + to_string(usuario->getId()) + "';";
+    sql = "SELECT * FROM tarefa WHERE usuario_id = '" + to_string(usuario->getId()) + "';";
     resultado = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL);
 
     if (resultado != SQLITE_OK) {
