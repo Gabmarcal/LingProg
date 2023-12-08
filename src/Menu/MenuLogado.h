@@ -9,9 +9,17 @@ class MenuLogado : public Menu {
         virtual ~MenuLogado();
         virtual void printarOpcoes();
         virtual bool executarEscolha( int escolha );
+        Projeto getProjeto();
         
     private:
-        
+        void criarProjeto();
+        void removerProjeto();
+        void listarProjetos();
+        bool entrarProjeto();
+        void sair();
+
+        Projeto projeto;
+
         
 };
 

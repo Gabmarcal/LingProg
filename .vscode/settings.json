@@ -48,6 +48,16 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "iomanip": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "chrono": "cpp",
+        "ctime": "cpp",
+        "optional": "cpp",
+        "ratio": "cpp",
+        "ranges": "cpp",
+        "sstream": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp",
+        "cinttypes": "cpp",
+        "semaphore": "cpp"
     }
 }

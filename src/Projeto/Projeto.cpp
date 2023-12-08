@@ -1,7 +1,12 @@
 #include "Projeto.h"
 
-Projeto::Projeto(int id, string nome, string descricao, time_t dataInicio) 
-    : id(id), nome(nome), descricao(descricao), dataInicio(dataInicio) {}
+Projeto::Projeto() : id(0), nome(""), descricao("") {
+    dataInicio = chrono::system_clock::to_time_t(chrono::system_clock::now());
+}
+
+Projeto::Projeto(int id, string nome, string descricao) : id(id), nome(nome), descricao(descricao) {
+    dataInicio = chrono::system_clock::to_time_t(chrono::system_clock::now());
+}
 
 // Getters e Setters
 int Projeto::getId() const {
@@ -28,7 +33,7 @@ void Projeto::setDescricao(string novaDescricao) {
     descricao = novaDescricao;
 }
 
-time_t Projeto::getDataInicio() const {
+time_t& Projeto::getDataInicio() {
     return dataInicio;
 }
 

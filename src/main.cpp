@@ -4,6 +4,7 @@
 #include "BancoDeDados/BancoDeDados.h"
 #include "Menu/MenuNaoLogado.h"
 #include "Menu/MenuLogado.h"
+#include "Menu/MenuProjetos.h"
 
 using namespace std;
 
@@ -22,6 +23,16 @@ int main() {
 
     delete menu;
     menu = new MenuLogado(nomeBancoDeDados, nomeSchema);
+    try {
+        menu->mostrarMenu();
+    } catch (exception *erro) {
+        cout << erro->what() << endl;
+        exit(1);
+    }
+    
+    Projeto projeto = ((MenuLogado *) menu)->getProjeto();
+    delete menu;
+    menu = new MenuProjetos(nomeBancoDeDados, nomeSchema, projeto);
     try {
         menu->mostrarMenu();
     } catch (exception *erro) {

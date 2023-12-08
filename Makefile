@@ -13,10 +13,10 @@ SRCDIR = src/
 OBJDIR = obj/
 
 # Arquivos fonte
-SRC = $(SRCDIR)main.cpp $(SRCDIR)Projeto/Projeto.cpp $(SRCDIR)Usuario/Usuario.cpp $(SRCDIR)BancoDeDados/BancoDeDados.cpp $(SRCDIR)Tarefa/Tarefa.cpp $(SRCDIR)Usuario/Senha.cpp $(SRCDIR)Menu/Menu.cpp $(SRCDIR)Menu/MenuNaoLogado.cpp $(SRCDIR)Menu/MenuLogado.cpp
+SRC = $(SRCDIR)main.cpp $(SRCDIR)Projeto/Projeto.cpp $(SRCDIR)Usuario/Usuario.cpp $(SRCDIR)BancoDeDados/BancoDeDados.cpp $(SRCDIR)Tarefa/Tarefa.cpp $(SRCDIR)Usuario/Senha.cpp $(SRCDIR)Menu/Menu.cpp $(SRCDIR)Menu/MenuNaoLogado.cpp $(SRCDIR)Menu/MenuLogado.cpp $(SRCDIR)Menu/MenuProjetos.cpp
 
 # Arquivos objeto
-OBJ = $(OBJDIR)main.o $(OBJDIR)Projeto.o $(OBJDIR)Usuario.o $(OBJDIR)BancoDeDados.o $(OBJDIR)Tarefa.o $(OBJDIR)Senha.o $(OBJDIR)Menu.o $(OBJDIR)MenuNaoLogado.o $(OBJDIR)MenuLogado.o
+OBJ = $(OBJDIR)main.o $(OBJDIR)Projeto.o $(OBJDIR)Usuario.o $(OBJDIR)BancoDeDados.o $(OBJDIR)Tarefa.o $(OBJDIR)Senha.o $(OBJDIR)Menu.o $(OBJDIR)MenuNaoLogado.o $(OBJDIR)MenuLogado.o $(OBJDIR)MenuProjetos.o
 
 # Regra padrão
 all: $(TARGET)
@@ -52,6 +52,9 @@ $(OBJDIR)MenuNaoLogado.o: $(SRCDIR)Menu/MenuNaoLogado.cpp
 
 $(OBJDIR)MenuLogado.o: $(SRCDIR)Menu/MenuLogado.cpp
 	$(CXX) $(CXXFLAGS) -c $(SRCDIR)Menu/MenuLogado.cpp -o $(OBJDIR)MenuLogado.o $(CLIBS)
+
+$(OBJDIR)MenuProjetos.o: $(SRCDIR)Menu/MenuProjetos.cpp
+	$(CXX) $(CXXFLAGS) -c $(SRCDIR)Menu/MenuProjetos.cpp -o $(OBJDIR)MenuProjetos.o $(CLIBS)
 
 
 # Regra para limpar os arquivos compilados

@@ -4,19 +4,22 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <chrono>
+#include <ctime>
 #include "../Tarefa/Tarefa.h"
 
 using namespace std;
 
 class Projeto {
     public:
-        Projeto(int _id, string _nome, string _descricao, time_t _dataInicio);
+        Projeto();
+        Projeto(int _id, string _nome, string _descricao);
 
         // Getters
         int getId() const;
         string getNome() const;
         string getDescricao() const;
-        time_t getDataInicio() const;
+        time_t& getDataInicio();
         set<Tarefa> getTarefas() const;
 
         // Setters

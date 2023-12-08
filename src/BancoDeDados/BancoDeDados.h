@@ -26,29 +26,35 @@ class BancoDeDados {
         void inserirUsuario(Usuario& usuario);
         void removerUsuario(Usuario& usuario);
         void atualizarUsuario(Usuario& usuario);
-        void buscarUsuario(Usuario& usuario);
+        Usuario buscarUsuario(string nomeUsuario);
+        vector<Usuario> listarUsuarios();
         
         // Tarefas
         void inserirTarefa(Tarefa& tarefa);
-        void removerTarefa(Tarefa& tarefa);
+        void removerTarefa(string nomeTarefa);
         void atualizarTarefa(Tarefa& tarefa);
-        void buscarTarefa(Tarefa& tarefa);
+        Tarefa buscarTarefa(string nomeTarefa);
+        vector<Tarefa> listarTarefasDoProjeto();
 
         // Projetos
         void inserirProjeto(Projeto& projeto);
-        void removerProjeto(Projeto& projeto);
+        void removerProjeto(string nomeProjeto);
         void atualizarProjeto(Projeto& projeto);
-        void buscarProjeto(Projeto& projeto);
+        Projeto buscarProjeto(string nomeProjeto);
+        vector<Projeto> listarProjetos();
         
         // Métodos auxiliares
         Usuario* login(string nome, string senha);
         void registrar(string nome, string email, string senha);
         int generate_id(string table);
+        time_t string_to_time_t(string data);
 
     private:
         string stringConexao;
         sqlite3* db;
 };
+
+
 
 
 #endif
