@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <sqlite3.h>
+#include <limits>
 
 using namespace std;
 

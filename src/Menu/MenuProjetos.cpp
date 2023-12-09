@@ -34,6 +34,7 @@ bool MenuProjetos::executarEscolha( int escolha ) {
         }
 
         case 3: {
+            listarTarefas();
             removerTarefa();
             return false;
         }
@@ -45,16 +46,18 @@ bool MenuProjetos::executarEscolha( int escolha ) {
 
         case 5: {
             string nomeTarefa;
+            listarTarefas();
             cout << "Digite o nome da tarefa: ";
-            cin >> nomeTarefa;
+            getline(cin, nomeTarefa);
             atualizarStatusTarefa(nomeTarefa);
             return false;
         }
 
         case 6: {
             string nomeTarefa;
+            listarTarefas();
             cout << "Digite o nome da tarefa: ";
-            cin >> nomeTarefa;
+            getline(cin, nomeTarefa);
             informaçõesTarefa(nomeTarefa);
             return false;
         }
@@ -82,18 +85,19 @@ void MenuProjetos::adicionarTarefa() {
     time_t prazo;
 
     cout << "Digite o nome da tarefa: ";
-    cin >> nomeTarefa;
+    getline(cin, nomeTarefa);
 
     cout << "Digite a descrição da tarefa: ";
-    cin >> descricaoTarefa;
+    getline(cin, descricaoTarefa);
 
     cout << "Digite a data do prazo da tarefa: ";
-    cin >> stringPrazo;
+    getline(cin, stringPrazo);
 
-    cout << "Digite o usuário responsável pela tarefa: ";
-    cin >> nomeUsuario;
 
     prazo = bancoDeDados.string_to_time_t(stringPrazo);
+
+    cout << "Digite o usuário responsável pela tarefa: ";
+    getline(cin, nomeUsuario);
 
 
     Tarefa tarefa(-1, nomeTarefa, descricaoTarefa, prazo);
@@ -110,8 +114,9 @@ void MenuProjetos::adicionarTarefa() {
 
 void MenuProjetos::removerTarefa() {
     string nomeTarefa;
+
     cout << "Digite o nome da tarefa: ";
-    cin >> nomeTarefa;
+    getline(cin, nomeTarefa);
 
     projeto.buscarTarefa(nomeTarefa);
     projeto.removerTarefa(nomeTarefa);
@@ -120,6 +125,7 @@ void MenuProjetos::removerTarefa() {
 
 void MenuProjetos::listarTarefas() {
     set<Tarefa> tarefas = projeto.getTarefas();
+    cout << "LISTANDO TAREFAS" << endl;
 
     cout << "Tarefas:" << endl;
     for (Tarefa tarefa : tarefas) {
@@ -129,9 +135,12 @@ void MenuProjetos::listarTarefas() {
 
 void MenuProjetos::atualizarStatusTarefa(string nomeTarefa) {
     int status_int;
+    string status_str;
     Status status;
+
     cout << "Digite o status da tarefa (0-Pendente, 1-EmAndamento, 2-Concluida): ";
-    cin >> status_int;
+    getline(cin, status_str);
+    status_int = stoi(status_str);
 
     switch (status_int) {
         case 0: {
@@ -160,6 +169,8 @@ void MenuProjetos::atualizarStatusTarefa(string nomeTarefa) {
     
 
     tarefa.setStatus(status);
+    projeto.removerTarefa(nomeTarefa);
+    projeto.adicionarTarefa(tarefa);
 
     bancoDeDados.atualizarTarefa(tarefa);
 }

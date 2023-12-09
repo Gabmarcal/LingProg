@@ -17,10 +17,12 @@ Menu::~Menu() {
 
 void Menu::mostrarMenu() {
     int escolha;
+    string escolhaStr;
 
     while (true) {
         printarOpcoes();
-        cin >> escolha;
+        getline(cin, escolhaStr);
+        escolha = stoi(escolhaStr);
         if ( executarEscolha(escolha) ) {
             break;
         }

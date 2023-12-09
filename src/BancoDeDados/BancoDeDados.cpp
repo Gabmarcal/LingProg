@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <regex>
+#include <ctime>
 
 BancoDeDados::BancoDeDados(string stringConexao) 
     : stringConexao(stringConexao) {}
@@ -571,14 +572,37 @@ Usuario* BancoDeDados::login(string email, string senha) {
     return usuario;
 }
 
-time_t BancoDeDados::string_to_time_t(string data) {
-    struct tm tm;
-    time_t t;
 
-    strptime(data.c_str(), "%Y-%m-%d %H:%M:%S", &tm);
-    t = mktime(&tm);
+time_t BancoDeDados::string_to_time_t(string dataStr) { // Data no formato : DD/MM/AAAA
+    dataStr = dataStr.substr(0, 10);
+    int dia, mes, ano;
 
-    return t;
+    try {
+        dia = stoi(dataStr.substr(0, 2));
+        mes = stoi(dataStr.substr(3, 2));
+        ano = stoi(dataStr.substr(6, 4));
+    }
+    catch (invalid_argument& e) {
+        throw UsuarioException(FORMATO_DATA_INVALIDO);
+    }
+    
+
+    if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || ano < 0) {
+        throw UsuarioException(DATA_INVALIDA);
+    }
+
+    struct tm dataTime;
+    dataTime.tm_mday = dia;
+    dataTime.tm_mon = mes - 1;
+    dataTime.tm_year = ano - 1900;
+    dataTime.tm_hour = 0;
+    dataTime.tm_min = 0;
+    dataTime.tm_sec = 0;
+    dataTime.tm_isdst = -1;
+
+    time_t dataTimeT = mktime(&dataTime);
+
+    return dataTimeT;
 }
 
 // Verificar se o formato é de um email

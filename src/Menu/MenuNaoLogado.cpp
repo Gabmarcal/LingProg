@@ -46,9 +46,9 @@ bool MenuNaoLogado::login() {
     string email, senha;
 
     cout << "Digite seu email: ";
-    cin >> email;
+    getline(cin, email);
     cout << "Digite sua senha: ";
-    cin >> senha;
+    getline(cin, senha);
 
     bancoDeDados.login(email, senha);
     cout << "Login realizado com sucesso!" << endl;
@@ -63,7 +63,7 @@ void MenuNaoLogado::registrar() {
 
     while(true) {
         cout << "Digite seu email: ";
-        cin >> email;
+        getline(cin, email);
         if (bancoDeDados.verificarEmail(email)) {
             break;
         }
@@ -72,7 +72,7 @@ void MenuNaoLogado::registrar() {
 
     while(true) {
         cout << "Digite sua senha: ";
-        cin >> senha;
+        getline(cin, senha);
         if (bancoDeDados.verificarSenha(senha)) {
             break;
         }

@@ -15,6 +15,8 @@ enum ErrosUsuario {
     PROJETO_JA_CADASTRADO,
     TAREFA_NAO_ENCONTRADA,
     TAREFA_JA_CADASTRADA,
+    FORMATO_DATA_INVALIDO,
+    DATA_INVALIDA
 };
 
 class UsuarioException : public exception {
@@ -44,6 +46,12 @@ class UsuarioException : public exception {
                     break;
                 case TAREFA_JA_CADASTRADA:
                     msg = "Tarefa ja cadastrada";
+                    break;
+                case FORMATO_DATA_INVALIDO:
+                    msg = "Formato de data invalido";
+                    break;
+                case DATA_INVALIDA:
+                    msg = "Data invalida";
                     break;
             }
         }
