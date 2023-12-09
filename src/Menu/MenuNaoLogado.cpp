@@ -59,11 +59,27 @@ void MenuNaoLogado::registrar() {
     string nome, email, senha;
 
     cout << "Digite seu nome: ";
-    cin >> nome;
-    cout << "Digite seu email: ";
-    cin >> email;
-    cout << "Digite sua senha: ";
-    cin >> senha;
+    getline(cin, nome);
+
+    while(true) {
+        cout << "Digite seu email: ";
+        cin >> email;
+        if (bancoDeDados.verificarEmail(email)) {
+            break;
+        }
+        cout << "Email inválido!" << endl;
+    }
+
+    while(true) {
+        cout << "Digite sua senha: ";
+        cin >> senha;
+        if (bancoDeDados.verificarSenha(senha)) {
+            break;
+        }
+        // Senha deve ter pelo menos 8 caracteres, contendo pelo menos uma letra maiúscula, uma letra minúscula e um número
+        cout << "Senha inválida!" << endl;
+        cout << "A senha deve ter pelo menos 8 caracteres, contendo pelo menos uma letra maiúscula, uma letra minúscula e um número" << endl;
+    }
 
     bancoDeDados.registrar(nome, email, senha);
 }

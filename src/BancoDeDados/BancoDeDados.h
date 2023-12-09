@@ -49,6 +49,8 @@ class BancoDeDados {
         void registrar(string nome, string email, string senha);
         int generate_id(string table);
         time_t string_to_time_t(string data);
+        bool verificarEmail(string email);
+        bool verificarSenha(string senha);
 
     private:
         string stringConexao;

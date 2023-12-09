@@ -1,13 +1,14 @@
 #include "Menu.h"
 
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
 Menu::Menu(string nomeBancoDeDados, string nomeSchema) : bancoDeDados(nomeBancoDeDados) {
     bancoDeDados.conectar();
     bancoDeDados.criarTabelas(nomeSchema);
-    //cout << "Tabelas criadas com sucesso." << endl;
+
 }
 
 Menu::~Menu() {

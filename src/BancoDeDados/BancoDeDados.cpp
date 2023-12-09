@@ -1,8 +1,10 @@
 #include "BancoDeDados.h"
 #include "../Usuario/Senha.h"
+#include "../Usuario/UsuarioException.h"
 
 #include <fstream>
 #include <sstream>
+#include <regex>
 
 BancoDeDados::BancoDeDados(string stringConexao) 
     : stringConexao(stringConexao) {}
@@ -62,7 +64,17 @@ void BancoDeDados::inserirUsuario(Usuario& usuario) {
     resultado = sqlite3_exec(db, sql.c_str(), NULL, NULL, NULL);
 
     if (resultado != SQLITE_OK) {
-        throw BancoDeDadosException(sqlite3_errmsg(db));
+        // Se o erro for UNIQUE constraint failed: usuario.email
+        if (string(sqlite3_errmsg(db)).find("UNIQUE constraint failed: usuario.email") != string::npos) {
+            throw UsuarioException(USUARIO_EMAIL_JA_CADASTRADO);
+        }
+        // Se o erro for UNIQUE constraint failed: usuario.nome
+        else if (string(sqlite3_errmsg(db)).find("UNIQUE constraint failed: usuario.nome") != string::npos) {
+            throw UsuarioException(USUARIO_NOME_JA_CADASTRADO);
+        }
+        else{
+            throw BancoDeDadosException(sqlite3_errmsg(db));
+        }
     }
 
 }
@@ -215,7 +227,13 @@ void BancoDeDados::inserirTarefa(Tarefa& tarefa) {
     resultado = sqlite3_exec(db, sql.c_str(), NULL, NULL, NULL);
 
     if (resultado != SQLITE_OK) {
-        throw BancoDeDadosException(sqlite3_errmsg(db));
+        // Se o erro for UNIQUE constraint failed: tarefa.titulo
+        if (string(sqlite3_errmsg(db)).find("UNIQUE constraint failed: tarefa.titulo") != string::npos) {
+            throw UsuarioException(TAREFA_JA_CADASTRADA);
+        }
+        else{
+            throw BancoDeDadosException(sqlite3_errmsg(db));
+        }
     }
 
 }
@@ -321,7 +339,13 @@ void BancoDeDados::inserirProjeto(Projeto& projeto) {
     resultado = sqlite3_exec(db, sql.c_str(), NULL, NULL, NULL);
 
     if (resultado != SQLITE_OK) {
-        throw BancoDeDadosException(sqlite3_errmsg(db));
+        // Se o erro for UNIQUE constraint failed: projeto.nome
+        if (string(sqlite3_errmsg(db)).find("UNIQUE constraint failed: projeto.nome") != string::npos) {
+            throw UsuarioException(PROJETO_JA_CADASTRADO);
+        }
+        else{
+            throw BancoDeDadosException(sqlite3_errmsg(db));
+        }
     }
 
 }
@@ -404,7 +428,8 @@ Projeto BancoDeDados::buscarProjeto(string nomeProjeto) {
         return projeto;
     }
     else {  // NÃO ENCONTROU PROJETO
-        throw BancoDeDadosException("Projeto não encontrado"); 
+        sqlite3_finalize(stmt);
+        throw UsuarioException(PROJETO_NAO_ENCONTRADO);
     }
 }
 
@@ -472,7 +497,6 @@ void BancoDeDados::registrar(string nome, string email, string senha) {
 
     
     int id = generate_id("usuario");
-
     
     Usuario user_novo(id, nome, email, senha);
     inserirUsuario(user_novo);
@@ -505,12 +529,14 @@ Usuario* BancoDeDados::login(string email, string senha) {
                 (char*) sqlite3_column_text(stmt, 3)); // senha
         }
         else {
-            throw BancoDeDadosException("Senha incorreta");
+            sqlite3_finalize(stmt);
+            throw UsuarioException(USUARIO_SENHA_INCORRETA);
         }
     }
 
     else {
-        throw BancoDeDadosException("Usuário não encontrado"); 
+        sqlite3_finalize(stmt);
+        throw UsuarioException(USUARIO_NAO_ENCONTRADO);; 
     }
     
     sqlite3_finalize(stmt);
@@ -553,4 +579,18 @@ time_t BancoDeDados::string_to_time_t(string data) {
     t = mktime(&tm);
 
     return t;
+}
+
+// Verificar se o formato é de um email
+bool BancoDeDados::verificarEmail(string email) {
+    regex padrao_email("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
+
+    return regex_match(email, padrao_email);
+}
+
+// Verificar se a senha tem pelo menos 8 caracteres, 1 letra maiúscula, 1 letra minúscula e 1 número
+bool BancoDeDados::verificarSenha(string senha) {
+    regex padrao_senha("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$");
+
+    return regex_match(senha, padrao_senha);
 }

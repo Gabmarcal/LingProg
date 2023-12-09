@@ -113,8 +113,9 @@ void MenuProjetos::removerTarefa() {
     cout << "Digite o nome da tarefa: ";
     cin >> nomeTarefa;
 
-    bancoDeDados.removerTarefa(nomeTarefa);
+    projeto.buscarTarefa(nomeTarefa);
     projeto.removerTarefa(nomeTarefa);
+    bancoDeDados.removerTarefa(nomeTarefa);
 }
 
 void MenuProjetos::listarTarefas() {
@@ -154,7 +155,7 @@ void MenuProjetos::atualizarStatusTarefa(string nomeTarefa) {
         }
     }
 
-    Tarefa tarefa = bancoDeDados.buscarTarefa(nomeTarefa);
+    Tarefa tarefa = projeto.buscarTarefa(nomeTarefa);
 
     
 
@@ -164,7 +165,7 @@ void MenuProjetos::atualizarStatusTarefa(string nomeTarefa) {
 }
 
 void MenuProjetos::informaçõesTarefa(string nomeTarefa) {
-    Tarefa tarefa = bancoDeDados.buscarTarefa(nomeTarefa);
+    Tarefa tarefa = projeto.buscarTarefa(nomeTarefa);
 
     cout << "Nome: " << tarefa.getTitulo() << endl;
     cout << "Descrição: " << tarefa.getDescricao() << endl;

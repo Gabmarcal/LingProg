@@ -31,6 +31,7 @@ class Projeto {
         // Métodos
         void adicionarTarefa(Tarefa& tarefa);
         void removerTarefa(string nomeTarefa);
+        Tarefa buscarTarefa(string nomeTarefa);
 
     private:
         int id;

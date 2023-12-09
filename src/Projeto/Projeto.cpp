@@ -1,5 +1,7 @@
 #include "Projeto.h"
 
+#include "../Usuario/UsuarioException.h"
+
 Projeto::Projeto() : id(0), nome(""), descricao("") {
     dataInicio = chrono::system_clock::to_time_t(chrono::system_clock::now());
 }
@@ -58,4 +60,13 @@ void Projeto::removerTarefa(string nomeTarefa) {
             break;
         }
     }
+}
+
+Tarefa Projeto::buscarTarefa(string nomeTarefa) {
+    for (Tarefa tarefa : tarefas) {
+        if (tarefa.getTitulo() == nomeTarefa) {
+            return tarefa;
+        }
+    }
+    throw UsuarioException(TAREFA_NAO_ENCONTRADA);
 }
