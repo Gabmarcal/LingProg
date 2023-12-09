@@ -7,80 +7,79 @@
 
 using namespace std;
 
-MenuProjetos::MenuProjetos(string nomeBancoDeDados, string nomeSchema, Projeto _projeto) : Menu(nomeBancoDeDados, nomeSchema), projeto(_projeto) {}
+MenuProjetos::MenuProjetos(string nomeBancoDeDados, string nomeSchema, Projeto _projeto) 
+    : Menu(nomeBancoDeDados, nomeSchema), projeto(_projeto) {}
 
 MenuProjetos::~MenuProjetos() {}
 
 void MenuProjetos::printarOpcoes() {
-    cout << "1 - Ver informações do projeto" << endl;
-    cout << "2 - Adicionar tarefa" << endl;
-    cout << "3 - Remover tarefa" << endl;
-    cout << "4 - Listar tarefas" << endl;
-    cout << "5 - Atualizar status da tarefa" << endl;
-    cout << "6 - Mostrar informações da tarefa" << endl;
-    cout << "0 - Sair" << endl;
+    cout << "\n-- Opções do Menu de Projeto --\n";
+    cout << "1 - Ver informações do projeto\n";
+    cout << "2 - Adicionar tarefa\n";
+    cout << "3 - Remover tarefa\n";
+    cout << "4 - Listar tarefas\n";
+    cout << "5 - Atualizar status da tarefa\n";
+    cout << "6 - Mostrar informações da tarefa\n";
+    cout << "0 - Sair\n";
+    cout << "Escolha uma opção: ";
 }
 
-bool MenuProjetos::executarEscolha( int escolha ) {
+bool MenuProjetos::executarEscolha(int escolha) {
+    string nomeTarefa;
+
     switch (escolha) {
-        case 1: {
+        case 1:
             verInformacoes();
-            return false;
-        }
+            break;
 
-        case 2: {
+        case 2:
             adicionarTarefa();
-            return false;
-        }
+            break;
 
-        case 3: {
+        case 3:
             listarTarefas();
             removerTarefa();
-            return false;
-        }
+            break;
 
-        case 4: {
+        case 4:
             listarTarefas();
-            return false;
-        }
+            break;
 
-        case 5: {
-            string nomeTarefa;
+        case 5:
             listarTarefas();
             cout << "Digite o nome da tarefa: ";
             getline(cin, nomeTarefa);
             atualizarStatusTarefa(nomeTarefa);
-            return false;
-        }
+            break;
 
-        case 6: {
-            string nomeTarefa;
+        case 6:
             listarTarefas();
             cout << "Digite o nome da tarefa: ";
             getline(cin, nomeTarefa);
             informaçõesTarefa(nomeTarefa);
-            return false;
-        }
+            break;
 
-        case 0: {
+        case 0:
             sair();
-        }
+            break;
 
-        default: {
+        default:
             cout << "Opção inválida!" << endl;
             break;
-        }
     }
     return false;
 }
 
 void MenuProjetos::verInformacoes() {
+    cout << "\n-- Informações do Projeto --\n";
     cout << "Nome: " << projeto.getNome() << endl;
     cout << "Descrição: " << projeto.getDescricao() << endl;
     cout << "Data de início: " << ctime(&projeto.getDataInicio()) << endl;
 }
 
 void MenuProjetos::adicionarTarefa() {
+    cout << "\n-- Adicionar Tarefa ao Projeto --\n";
+
     string nomeTarefa, descricaoTarefa, stringPrazo, nomeUsuario;
     time_t prazo;
 
@@ -90,15 +89,12 @@ void MenuProjetos::adicionarTarefa() {
     cout << "Digite a descrição da tarefa: ";
     getline(cin, descricaoTarefa);
 
-    cout << "Digite a data do prazo da tarefa: ";
+    cout << "Digite a data do prazo da tarefa (DD/MM/AAAA): ";
     getline(cin, stringPrazo);
-
-
     prazo = bancoDeDados.string_to_time_t(stringPrazo);
 
-    cout << "Digite o usuário responsável pela tarefa: ";
+    cout << "Digite o nome do usuário responsável pela tarefa: ";
     getline(cin, nomeUsuario);
-
 
     Tarefa tarefa(-1, nomeTarefa, descricaoTarefa, prazo);
     Usuario usuario = bancoDeDados.buscarUsuario(nomeUsuario);
@@ -109,25 +105,28 @@ void MenuProjetos::adicionarTarefa() {
 
     bancoDeDados.inserirTarefa(tarefa);
     projeto.adicionarTarefa(tarefa);
-    cout << "Tarefa criada com sucesso!" << endl;
+
+    cout << "Tarefa '" << nomeTarefa << "' criada com sucesso!\n";
 }
 
 void MenuProjetos::removerTarefa() {
+    cout << "\n-- Remover Tarefa do Projeto --\n";
+
     string nomeTarefa;
-
-    cout << "Digite o nome da tarefa: ";
+    cout << "Digite o nome da tarefa que deseja remover: ";
     getline(cin, nomeTarefa);
-
+    
     projeto.buscarTarefa(nomeTarefa);
     projeto.removerTarefa(nomeTarefa);
     bancoDeDados.removerTarefa(nomeTarefa);
+    cout << "Tarefa '" << nomeTarefa << "' removida com sucesso!\n";
+    
 }
 
 void MenuProjetos::listarTarefas() {
     set<Tarefa> tarefas = projeto.getTarefas();
-    cout << "LISTANDO TAREFAS" << endl;
 
-    cout << "Tarefas:" << endl;
+    cout << "\nTarefas:" << endl;
     for (Tarefa tarefa : tarefas) {
         cout << tarefa.getTitulo() << endl;
     }
@@ -166,13 +165,12 @@ void MenuProjetos::atualizarStatusTarefa(string nomeTarefa) {
 
     Tarefa tarefa = projeto.buscarTarefa(nomeTarefa);
 
-    
-
     tarefa.setStatus(status);
     projeto.removerTarefa(nomeTarefa);
     projeto.adicionarTarefa(tarefa);
-
     bancoDeDados.atualizarTarefa(tarefa);
+
+    cout << "Status da tarefa '" << nomeTarefa << "' atualizado para " << tarefa.getStatusString() << ".\n";
 }
 
 void MenuProjetos::informaçõesTarefa(string nomeTarefa) {

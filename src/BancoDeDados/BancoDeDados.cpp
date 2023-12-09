@@ -154,7 +154,7 @@ Usuario BancoDeDados::buscarUsuario(string nomeUsuario) {
         return usuario;
     }
     else {  // NÃO ENCONTROU USUÁRIO
-        throw BancoDeDadosException("Usuário não encontrado"); 
+        throw UsuarioException(USUARIO_NAO_ENCONTRADO); 
     }
 }
 
@@ -181,7 +181,7 @@ string BancoDeDados::idParaNomeUsuario(int id) {
         return nome;
     }
     else {  // NÃO ENCONTROU USUÁRIO
-        throw BancoDeDadosException("Usuário não encontrado"); 
+        throw UsuarioException(USUARIO_NAO_ENCONTRADO); 
     }
 }
 
