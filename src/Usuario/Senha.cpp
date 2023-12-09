@@ -10,12 +10,18 @@ Senha::Senha( string senha ) : senha( senha ) {}
 void Senha::generateSalt() {
     const int saltLength = 16;
     unsigned char buffer[saltLength];
-    if (RAND_bytes(buffer, sizeof(buffer)) == 1) { // Se RAND_bytes retornar 1, a operação foi bem-sucedida
-        salt.assign(reinterpret_cast<char*>(buffer), saltLength);
+    if (RAND_bytes(buffer, sizeof(buffer)) == 1) { 
+        std::ostringstream hexStream;
+        hexStream << std::hex << std::setfill('0');
+        for (int i = 0; i < saltLength; ++i) {
+            hexStream << std::setw(2) << static_cast<int>(buffer[i]);
+        }
+        salt = hexStream.str();
     } else {
         throw SenhaException("Erro ao gerar salt");
     }
 }
+
 
 
 void Senha::combinePasswordAndSalt() {
