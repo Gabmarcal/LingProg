@@ -27,6 +27,7 @@ class BancoDeDados {
         void removerUsuario(Usuario& usuario);
         void atualizarUsuario(Usuario& usuario);
         Usuario buscarUsuario(string nomeUsuario);
+        string idParaNomeUsuario(int id);
         vector<Usuario> listarUsuarios();
         
         // Tarefas

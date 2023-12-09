@@ -18,6 +18,7 @@ class MenuProjetos : public Menu {
         void removerTarefa();
         void listarTarefas();
         void atualizarStatusTarefa(string nomeTarefa);
+        void informaçõesTarefa(string nomeTarefa);
 
 
         void sair();

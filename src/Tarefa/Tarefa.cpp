@@ -10,7 +10,7 @@ using namespace std;
 Tarefa::Tarefa(int id, string titulo, string descricao, time_t dataPrazo)
     : id(id), titulo(titulo), descricao(descricao), status(Pendente), dataPrazo(dataPrazo) {
     dataCriacao = chrono::system_clock::to_time_t(chrono::system_clock::now());
-    }
+}
 
 Tarefa::Tarefa(int id, string titulo, string descricao, Status status, time_t dataCriacao, time_t dataPrazo) 
     : id(id), titulo(titulo), descricao(descricao), status(status), dataCriacao(dataCriacao), dataPrazo(dataPrazo) {}
@@ -60,11 +60,24 @@ Status Tarefa::getStatus() const {
     return status;
 }
 
+string Tarefa::getStatusString() const {
+    switch (status) {
+        case Pendente:
+            return "Pendente";
+        case EmAndamento:
+            return "Em andamento";
+        case Concluida:
+            return "Concluída";
+        default:
+            return "Status inválido";
+    }
+}
+
 void Tarefa::setStatus(Status novoStatus) {
     status = novoStatus;
 }
 
-time_t Tarefa::getDataCriacao() const {
+time_t Tarefa::getDataCriacao() {
     return dataCriacao;
 }
 
@@ -72,7 +85,7 @@ void Tarefa::setDataCriacao(time_t novaDataCriacao) {
     dataCriacao = novaDataCriacao;
 }
 
-time_t Tarefa::getDataPrazo() const {
+time_t Tarefa::getDataPrazo() {
     return dataPrazo;
 }
 

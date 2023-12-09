@@ -7,11 +7,12 @@ using namespace std;
 Menu::Menu(string nomeBancoDeDados, string nomeSchema) : bancoDeDados(nomeBancoDeDados) {
     bancoDeDados.conectar();
     bancoDeDados.criarTabelas(nomeSchema);
-    bancoDeDados.desconectar();
-    cout << "Tabelas criadas com sucesso." << endl;
+    //cout << "Tabelas criadas com sucesso." << endl;
 }
 
-Menu::~Menu() {}
+Menu::~Menu() {
+    bancoDeDados.desconectar();
+}
 
 void Menu::mostrarMenu() {
     int escolha;

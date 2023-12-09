@@ -65,7 +65,6 @@ void BancoDeDados::inserirUsuario(Usuario& usuario) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
     }
 
-    sqlite3_close(db);
 }
 
 void BancoDeDados::removerUsuario(Usuario& usuario) {
@@ -78,7 +77,6 @@ void BancoDeDados::removerUsuario(Usuario& usuario) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
     }
 
-    sqlite3_close(db);
 }
 
 void BancoDeDados::atualizarUsuario(Usuario& usuario) {
@@ -91,7 +89,6 @@ void BancoDeDados::atualizarUsuario(Usuario& usuario) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
     }
 
-    sqlite3_close(db);
 }
 
 Usuario BancoDeDados::buscarUsuario(string nomeUsuario) {
@@ -115,8 +112,8 @@ Usuario BancoDeDados::buscarUsuario(string nomeUsuario) {
             (char*) sqlite3_column_text(stmt, 2), // email
             (char*) sqlite3_column_text(stmt, 3)); // senha
 
+
         sqlite3_finalize(stmt);
-        sqlite3_close(db);
 
         // Adicionando todas as tarefas em usuário
 
@@ -140,12 +137,41 @@ Usuario BancoDeDados::buscarUsuario(string nomeUsuario) {
             usuario.atribuirTarefa(tarefa);
         }
 
+        sqlite3_finalize(stmt);
         return usuario;
     }
     else {  // NÃO ENCONTROU USUÁRIO
         throw BancoDeDadosException("Usuário não encontrado"); 
     }
 }
+
+string BancoDeDados::idParaNomeUsuario(int id) {
+    int resultado;
+    sqlite3_stmt* stmt;
+
+
+    string sql = "SELECT nome FROM usuario WHERE id = '" + to_string(id) + "';";
+
+    resultado = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL);
+
+    if (resultado != SQLITE_OK) {
+        throw BancoDeDadosException(sqlite3_errmsg(db));
+    }
+    
+    resultado = sqlite3_step(stmt);
+
+    if (resultado == SQLITE_ROW) {  // ENCONTROU USUÁRIO
+        string nome = (char*) sqlite3_column_text(stmt, 0);
+
+        sqlite3_finalize(stmt);
+
+        return nome;
+    }
+    else {  // NÃO ENCONTROU USUÁRIO
+        throw BancoDeDadosException("Usuário não encontrado"); 
+    }
+}
+
 
 vector<Usuario> BancoDeDados::listarUsuarios() {
     int resultado;
@@ -170,7 +196,6 @@ vector<Usuario> BancoDeDados::listarUsuarios() {
     }
 
     sqlite3_finalize(stmt);
-    sqlite3_close(db);
 
     return usuarios;
 }
@@ -186,14 +211,13 @@ vector<Usuario> BancoDeDados::listarUsuarios() {
 void BancoDeDados::inserirTarefa(Tarefa& tarefa) {
     int resultado;
 
-    string sql = "INSERT INTO tarefa (titulo, descricao, status, data_criacao, data_prazo) VALUES ('" + tarefa.getTitulo() + "', '" + tarefa.getDescricao() + "', '" + to_string(tarefa.getStatus()) + "', '" + to_string(tarefa.getDataCriacao()) + "', '" + to_string(tarefa.getDataPrazo()) + "');";
+    string sql = "INSERT INTO tarefa (titulo, descricao, status, data_criacao, data_prazo, projeto_id, usuario_id) VALUES ('" + tarefa.getTitulo() + "', '" + tarefa.getDescricao() + "', '" + to_string(tarefa.getStatus()) + "', '" + to_string(tarefa.getDataCriacao()) + "', '"  + to_string(tarefa.getDataPrazo()) + "', '" + to_string(tarefa.getProjetoId()) + "', '" + to_string(tarefa.getUsuarioId()) +"');";
     resultado = sqlite3_exec(db, sql.c_str(), NULL, NULL, NULL);
 
     if (resultado != SQLITE_OK) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
     }
 
-    sqlite3_close(db);
 }
 
 void BancoDeDados::removerTarefa(string nomeTarefa) {
@@ -206,7 +230,6 @@ void BancoDeDados::removerTarefa(string nomeTarefa) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
     }
 
-    sqlite3_close(db);
 }
 
 void BancoDeDados::atualizarTarefa(Tarefa& tarefa) {
@@ -219,7 +242,6 @@ void BancoDeDados::atualizarTarefa(Tarefa& tarefa) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
     }
 
-    sqlite3_close(db);
 }
 
 Tarefa BancoDeDados::buscarTarefa(string nomeTarefa) {
@@ -245,8 +267,9 @@ Tarefa BancoDeDados::buscarTarefa(string nomeTarefa) {
             sqlite3_column_int(stmt, 4), // data_criacao
             sqlite3_column_int(stmt, 5)); // data_prazo
 
+        tarefa.setProjetoId(sqlite3_column_int(stmt, 6)); // projeto_id
+        tarefa.setUsuarioId(sqlite3_column_int(stmt, 7)); // usuario_id
         sqlite3_finalize(stmt);
-        sqlite3_close(db);
 
         return tarefa;
     }
@@ -280,7 +303,6 @@ vector<Tarefa> BancoDeDados::listarTarefasDoProjeto() {
     }
 
     sqlite3_finalize(stmt);
-    sqlite3_close(db);
 
     return tarefas;
 }
@@ -302,7 +324,6 @@ void BancoDeDados::inserirProjeto(Projeto& projeto) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
     }
 
-    sqlite3_close(db);
 }
 
 void BancoDeDados::removerProjeto(string nomeProjeto) {
@@ -315,7 +336,6 @@ void BancoDeDados::removerProjeto(string nomeProjeto) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
     }
 
-    sqlite3_close(db);
 }
 
 void BancoDeDados::atualizarProjeto(Projeto& projeto) {
@@ -328,12 +348,12 @@ void BancoDeDados::atualizarProjeto(Projeto& projeto) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
     }
 
-    sqlite3_close(db);
 }
 
 Projeto BancoDeDados::buscarProjeto(string nomeProjeto) {
     int resultado;
     sqlite3_stmt* stmt;
+
 
     string sql = "SELECT * FROM projeto WHERE nome = '" + nomeProjeto + "';";
     resultado = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL);
@@ -341,6 +361,7 @@ Projeto BancoDeDados::buscarProjeto(string nomeProjeto) {
     if (resultado != SQLITE_OK) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
     }
+
     
     resultado = sqlite3_step(stmt);
 
@@ -350,8 +371,17 @@ Projeto BancoDeDados::buscarProjeto(string nomeProjeto) {
             (char*) sqlite3_column_text(stmt, 1), // nome
             (char*) sqlite3_column_text(stmt, 2)); // descricao
 
+        
         sqlite3_finalize(stmt);
-        sqlite3_close(db);
+
+        // Adicionando todas as tarefas em projeto
+
+        sql = "SELECT * FROM tarefa WHERE projeto_id = '" + to_string(projeto.getId()) + "';";
+        resultado = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL);
+
+        if (resultado != SQLITE_OK) {
+            throw BancoDeDadosException(sqlite3_errmsg(db));
+        }
 
         while (sqlite3_step(stmt) == SQLITE_ROW) {
             Tarefa tarefa(
@@ -359,12 +389,18 @@ Projeto BancoDeDados::buscarProjeto(string nomeProjeto) {
                 (char*) sqlite3_column_text(stmt, 1), // titulo
                 (char*) sqlite3_column_text(stmt, 2), // descricao
                 (Status) sqlite3_column_int(stmt, 3), // status
-                sqlite3_column_int(stmt, 4), // data_criacao
-                sqlite3_column_int(stmt, 5)); // data_prazo
+                (time_t) sqlite3_column_int(stmt, 4), // data_criacao
+                (time_t) sqlite3_column_int(stmt, 5)); // data_prazo
+
+            tarefa.setProjetoId(sqlite3_column_int(stmt, 6)); // projeto_id
+            tarefa.setUsuarioId(sqlite3_column_int(stmt, 7)); // usuario_id
 
             projeto.adicionarTarefa(tarefa);
         }
 
+        sqlite3_finalize(stmt);
+
+        
         return projeto;
     }
     else {  // NÃO ENCONTROU PROJETO
@@ -394,7 +430,6 @@ vector<Projeto> BancoDeDados::listarProjetos() {
     }
 
     sqlite3_finalize(stmt);
-    sqlite3_close(db);
 
     return projetos;
 }
@@ -435,7 +470,6 @@ int BancoDeDados::generate_id(string table) {
 
 void BancoDeDados::registrar(string nome, string email, string senha) {
 
-    conectar();
     
     int id = generate_id("usuario");
 
@@ -452,7 +486,6 @@ Usuario* BancoDeDados::login(string email, string senha) {
     Usuario* usuario;
     Senha hash_senha(senha);
 
-    conectar();
 
     string sql = "SELECT * FROM usuario WHERE email = '" + email + "';";
     resultado = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, NULL);
@@ -480,6 +513,8 @@ Usuario* BancoDeDados::login(string email, string senha) {
         throw BancoDeDadosException("Usuário não encontrado"); 
     }
     
+    sqlite3_finalize(stmt);
+    
     // Adicionando todas as tarefas em usuário
 
     sql = "SELECT * FROM tarefa WHERE usuario_id = '" + to_string(usuario->getId()) + "';";
@@ -488,6 +523,7 @@ Usuario* BancoDeDados::login(string email, string senha) {
     if (resultado != SQLITE_OK) {
         throw BancoDeDadosException(sqlite3_errmsg(db));
     }
+    
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         Tarefa tarefa(
@@ -502,9 +538,9 @@ Usuario* BancoDeDados::login(string email, string senha) {
 
         usuario->atribuirTarefa(tarefa);
     }
+    
 
     sqlite3_finalize(stmt);
-    sqlite3_close(db);
 
     return usuario;
 }

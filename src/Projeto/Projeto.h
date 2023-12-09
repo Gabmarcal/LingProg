@@ -30,7 +30,7 @@ class Projeto {
 
         // Métodos
         void adicionarTarefa(Tarefa& tarefa);
-        void removerTarefa(Tarefa& tarefa);
+        void removerTarefa(string nomeTarefa);
 
     private:
         int id;

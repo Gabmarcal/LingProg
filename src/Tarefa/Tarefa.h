@@ -20,8 +20,9 @@ class Tarefa {
         string getTitulo() const;
         string getDescricao() const;
         Status getStatus() const;
-        time_t getDataCriacao() const;
-        time_t getDataPrazo() const;
+        string getStatusString() const;
+        time_t getDataCriacao();
+        time_t getDataPrazo();
         
 
         // Setters

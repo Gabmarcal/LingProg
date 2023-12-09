@@ -17,7 +17,8 @@ void MenuProjetos::printarOpcoes() {
     cout << "3 - Remover tarefa" << endl;
     cout << "4 - Listar tarefas" << endl;
     cout << "5 - Atualizar status da tarefa" << endl;
-    cout << "6 - Sair" << endl;
+    cout << "6 - Mostrar informações da tarefa" << endl;
+    cout << "0 - Sair" << endl;
 }
 
 bool MenuProjetos::executarEscolha( int escolha ) {
@@ -51,6 +52,14 @@ bool MenuProjetos::executarEscolha( int escolha ) {
         }
 
         case 6: {
+            string nomeTarefa;
+            cout << "Digite o nome da tarefa: ";
+            cin >> nomeTarefa;
+            informaçõesTarefa(nomeTarefa);
+            return false;
+        }
+
+        case 0: {
             sair();
         }
 
@@ -88,11 +97,14 @@ void MenuProjetos::adicionarTarefa() {
 
 
     Tarefa tarefa(-1, nomeTarefa, descricaoTarefa, prazo);
-    tarefa.setUsuarioId(bancoDeDados.buscarUsuario(nomeUsuario).getId());
-    bancoDeDados.conectar();
+    Usuario usuario = bancoDeDados.buscarUsuario(nomeUsuario);
+
+    tarefa.setUsuarioId(usuario.getId());
     tarefa.setId(bancoDeDados.generate_id("tarefa"));
+    tarefa.setProjetoId(projeto.getId());
 
     bancoDeDados.inserirTarefa(tarefa);
+    projeto.adicionarTarefa(tarefa);
     cout << "Tarefa criada com sucesso!" << endl;
 }
 
@@ -101,9 +113,8 @@ void MenuProjetos::removerTarefa() {
     cout << "Digite o nome da tarefa: ";
     cin >> nomeTarefa;
 
-    bancoDeDados.conectar();
     bancoDeDados.removerTarefa(nomeTarefa);
-    bancoDeDados.desconectar();
+    projeto.removerTarefa(nomeTarefa);
 }
 
 void MenuProjetos::listarTarefas() {
@@ -143,17 +154,27 @@ void MenuProjetos::atualizarStatusTarefa(string nomeTarefa) {
         }
     }
 
-    bancoDeDados.conectar();
     Tarefa tarefa = bancoDeDados.buscarTarefa(nomeTarefa);
-    bancoDeDados.desconectar();
 
     
 
     tarefa.setStatus(status);
 
-    bancoDeDados.conectar();
     bancoDeDados.atualizarTarefa(tarefa);
-    bancoDeDados.desconectar();
+}
+
+void MenuProjetos::informaçõesTarefa(string nomeTarefa) {
+    Tarefa tarefa = bancoDeDados.buscarTarefa(nomeTarefa);
+
+    cout << "Nome: " << tarefa.getTitulo() << endl;
+    cout << "Descrição: " << tarefa.getDescricao() << endl;
+    time_t dataCriacao = tarefa.getDataCriacao();
+    cout << "Data de criação: " << ctime(&dataCriacao);
+
+    time_t dataPrazo = tarefa.getDataPrazo();
+    cout << "Prazo: " << ctime(&dataPrazo);
+    cout << "Status: " << tarefa.getStatusString() << endl;
+    cout << "Usuário responsável: " << bancoDeDados.idParaNomeUsuario(tarefa.getUsuarioId()) << endl;
 }
 
 void MenuProjetos::sair() {

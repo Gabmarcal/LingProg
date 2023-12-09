@@ -59,7 +59,6 @@ void MenuLogado::criarProjeto() {
     cin >> descricaoProjeto;
 
     Projeto projeto(-1, nomeProjeto, descricaoProjeto );
-    bancoDeDados.conectar();
     projeto.setId(bancoDeDados.generate_id("projeto"));
 
     
@@ -72,13 +71,10 @@ void MenuLogado::removerProjeto() {
     cout << "Digite o nome do projeto: ";
     cin >> nomeProjeto;
 
-    bancoDeDados.conectar();
     bancoDeDados.removerProjeto(nomeProjeto);
-    bancoDeDados.desconectar();
 }
 
 void MenuLogado::listarProjetos() {
-    bancoDeDados.conectar();
     vector<Projeto> projetos = bancoDeDados.listarProjetos();
 
     cout << "Projetos:" << endl;
@@ -92,7 +88,6 @@ bool MenuLogado::entrarProjeto() {
     cout << "Digite o nome do projeto: ";
     cin >> nomeProjeto;
 
-    bancoDeDados.conectar();
     projeto = bancoDeDados.buscarProjeto(nomeProjeto);
     
     return true;

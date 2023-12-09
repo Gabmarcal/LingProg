@@ -51,6 +51,11 @@ void Projeto::adicionarTarefa(Tarefa& tarefa) {
     tarefas.insert(tarefa);
 }
 
-void Projeto::removerTarefa(Tarefa& tarefa) {
-    tarefas.erase(tarefa);
+void Projeto::removerTarefa(string nomeTarefa) {
+    for (Tarefa tarefa : tarefas) {
+        if (tarefa.getTitulo() == nomeTarefa) {
+            tarefas.erase(tarefa);
+            break;
+        }
+    }
 }
