@@ -11,10 +11,10 @@ void Senha::generateSalt() {
     const int saltLength = 16;
     unsigned char buffer[saltLength];
     if (RAND_bytes(buffer, sizeof(buffer)) == 1) { 
-        std::ostringstream hexStream;
-        hexStream << std::hex << std::setfill('0');
+        ostringstream hexStream;
+        hexStream << hex << setfill('0');
         for (int i = 0; i < saltLength; ++i) {
-            hexStream << std::setw(2) << static_cast<int>(buffer[i]);
+            hexStream << setw(2) << static_cast<int>(buffer[i]);
         }
         salt = hexStream.str();
     } else {
@@ -40,9 +40,9 @@ void Senha::calculateSHA256() {
             EVP_DigestUpdate(context, senha.c_str(), senha.size()) &&
             EVP_DigestFinal_ex(context, hash, &lengthOfHash)) {
             // Converte hash para hexadecimal
-            std::ostringstream oss;
+            ostringstream oss;
             for (unsigned int i = 0; i < lengthOfHash; ++i) {
-                oss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
+                oss << hex << setw(2) << setfill('0') << (int)hash[i];
             }
 
             EVP_MD_CTX_free(context);
